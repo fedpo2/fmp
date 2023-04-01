@@ -6,23 +6,11 @@
 //=================================//
 //
 //  pause function needs to be reworked
+//  fix cambio a siguiente cancion 
 //  
-
-
-using std::string;
-
-void passSong(int *selector, Music *music, char **argv[]) {
-  *selector--;
-  *music = LoadMusicStream(*argv[*selector]);
-  PlayMusicStream(*music);
-}
 
 int main (int argc, char *argv[]) {
 
-  int selector = 0;
-  bool pause;
-  float timePlayed = 0.0f;
-  
   if (argc<2) {
     std::cout << "      FMP - Fede Music Player\n"
               << "//=================================// \n" 
@@ -30,22 +18,43 @@ int main (int argc, char *argv[]) {
               << "//=================================// \n\n"; 
     return 0;
   }
+  
+  int selector = 1;
+  bool pause;
+  float timePlayed = 0.1f, lastTime = 0.0f;
 
   InitWindow(400,200,"fede");
   SetTargetFPS(60);
 
   InitAudioDevice();
-  selector++;
   Music music = LoadMusicStream(argv[selector]);
   PlayMusicStream(music);
 
     while (!IsKeyReleased(KEY_Q)) {
-      
+
+      timePlayed = GetMusicTimePlayed(music)/GetMusicTimeLength(music);
+
+      //chequea que el tiempo de reproduccion de la musica no sea más larga que la cancion 
+      if (timePlayed > 1.0f) {
+        timePlayed = 1.0f;
+      }
+
+      if (timePlayed < lastTime) {
+        if (selector != argc-1) {
+          selector++;
+        } else {
+          selector = 1; 
+        }
+        music = LoadMusicStream(argv[selector]);
+        PlayMusicStream(music);
+      }
+     
+      lastTime = timePlayed;
       UpdateMusicStream(music);
 
       if (IsKeyReleased(KEY_P)) {
         pause = !pause;
-        if (pause) {
+        if (pause == true) {
           PauseMusicStream(music);
         } else {
           ResumeMusicStream(music);
@@ -55,11 +64,13 @@ int main (int argc, char *argv[]) {
       if (IsKeyReleased(KEY_R)) {
         StopMusicStream(music);
         PlayMusicStream(music);
+        lastTime = 0.0f;
       }
 
       if (IsKeyReleased(KEY_LEFT)) {
         if(selector !=1){
           --selector;  // mov ax, [mem] => dec ax => mov [mem], ax 
+          lastTime = 0.0f;
           music = LoadMusicStream(argv[selector]);
           PlayMusicStream(music);
         }
@@ -68,21 +79,14 @@ int main (int argc, char *argv[]) {
       if (IsKeyReleased(KEY_RIGHT)) {
         if(selector != argc-1){
           ++selector;
+          lastTime = 0.0f;
           music = LoadMusicStream(argv[selector]);
           PlayMusicStream(music);
         }
       }
       
-      timePlayed = GetMusicTimePlayed(music)/GetMusicTimeLength(music);
 
-      //chequea que el tiempo de reproduccion de la musica no sea más larga que la cancion 
-      if (timePlayed > 1.0f) {
-        timePlayed = 1.0f;
-        
-        if (selector != argc-1) {
-          passSong(&selector, &music, &argv);
-        }
-      }
+
       BeginDrawing();
 
         ClearBackground(RAYWHITE);
@@ -100,11 +104,6 @@ int main (int argc, char *argv[]) {
   return 0;
 }
 //by fede
-
-
-
-
-
 
 /*
 char[] <- campo 
