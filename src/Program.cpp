@@ -12,7 +12,7 @@
 int main (int argc, char *argv[]) {
 
   if (argc<2) {
-    std::cout << "      FMP - Fede Music Player\n"
+    std::cout << "     FMP - Fede Music Player\n"
               << "//=================================// \n" 
               << "//  ./music [cancion1][cancion2].. // \n"
               << "//=================================// \n\n"; 
@@ -23,7 +23,7 @@ int main (int argc, char *argv[]) {
   bool pause;
   float timePlayed = 0.1f, lastTime = 0.0f;
 
-  InitWindow(400,200,"fede");
+  InitWindow(400,200,"FMP - Fede Music Player");
   SetTargetFPS(60);
 
   InitAudioDevice();
@@ -45,6 +45,7 @@ int main (int argc, char *argv[]) {
         } else {
           selector = 1; 
         }
+        lastTime = 0.0f;
         music = LoadMusicStream(argv[selector]);
         PlayMusicStream(music);
       }
@@ -85,8 +86,6 @@ int main (int argc, char *argv[]) {
         }
       }
       
-
-
       BeginDrawing();
 
         ClearBackground(RAYWHITE);
@@ -103,6 +102,7 @@ int main (int argc, char *argv[]) {
   CloseWindow();
   return 0;
 }
+
 //by fede
 
 /*
