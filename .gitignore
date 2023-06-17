@@ -1,0 +1,2 @@
+# ignora la carpeta de compilados
+./bin/*
