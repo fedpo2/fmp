@@ -1,13 +1,6 @@
+// Copyright (c) 2023 Federico Polidoro. All Rights Reserved.
 #include <raylib.h>
 #include <iostream>
-
-//=================================//
-//  ./music [cancion1][cancion2].. //
-//=================================//
-//
-//  pause function needs to be reworked
-//  fix cambio a siguiente cancion 
-//  
 
 int main (int argc, char *argv[]) {
 
@@ -102,13 +95,3 @@ int main (int argc, char *argv[]) {
   CloseWindow();
   return 0;
 }
-
-//by fede
-
-/*
-char[] <- campo 
-
-
-next()
-prvius()
-*/
