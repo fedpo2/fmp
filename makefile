@@ -1,8 +1,8 @@
-compile: src/Program.cpp
-	g++ src/Program.cpp -o bin/music -lraylib 
+compile: src/Program.c
+	gcc src/Program.c -o bin/music -lraylib
 
 run: bin/music
-	g++ src/Program.cpp -o bin/music -lraylib
+	gcc src/Program.c -o bin/music -lraylib
 	./bin/music ./bin/*.mp3
 
 install: bin/music 

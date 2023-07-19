@@ -1,14 +1,10 @@
 // Copyright (c) 2023 Federico Polidoro. All Rights Reserved.
 #include <raylib.h>
-#include <iostream>
-
+#include <stdio.h>
 int main (int argc, char *argv[]) {
 
   if (argc<2) {
-    std::cout << "     FMP - Fede Music Player\n"
-              << "//=================================// \n" 
-              << "//  ./music [cancion1][cancion2].. // \n"
-              << "//=================================// \n\n"; 
+    printf("     FMP - Fede Music Player\n//=================================// \n//  ./music [cancion1][cancion2].. // \n//=================================// \n\n");
     return 0;
   }
   
