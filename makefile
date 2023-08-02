@@ -1,9 +1,9 @@
-compile: src/Program.c
-	gcc src/Program.c -o bin/music -lraylib
+CC = gcc
+CFLAGS = -o ./fmp -lraylib
 
-run: bin/music
-	gcc src/Program.c -o bin/music -lraylib
-	./bin/music ./bin/*.mp3
+compile: ./src/Program.c
+	$(CC) $(CFLAGS) ./src/Program.c
 
-install: bin/music 
-	sudo cp bin/music /bin/fmp
+install: ./src/Program.c
+	$(CC) $(CFLAGS) ./src/Program.c 
+	sudo cp ./fmp /bin/fmp
