@@ -1,6 +1,10 @@
 // Copyright (c) 2023 Federico Polidoro. All Rights Reserved.
 #include <raylib.h>
 #include <stdio.h>
+
+#define MAX_FILEPATH_RECORDED   4096
+#define MAX_FILEPATH_SIZE       2048
+
 int main (int argc, char *argv[]) {
 
   if (argc<2) {
@@ -15,9 +19,15 @@ int main (int argc, char *argv[]) {
   int selector = 1;
   bool pause;
   float timePlayed = 0.1f, lastTime = 0.0f;
-
+  
   InitWindow(400,200,"FMP - Fede Music Player");
   SetTargetFPS(60);
+
+  char *filePaths[MAX_FILEPATH_RECORDED] = { 0 };
+
+  for (int i = 0; i < MAX_FILEPATH_RECORDED; i++) {
+    filePaths[i] = (char*)RL_CALLOC(MAX_FILEPATH_SIZE, 1);
+  }
 
   InitAudioDevice();
   Music music = LoadMusicStream(argv[selector]);
@@ -78,7 +88,16 @@ int main (int argc, char *argv[]) {
           PlayMusicStream(music);
         }
       }
-      
+     
+      if (IsFileDropped()) {
+        FilePathList droppedFiles = LoadDroppedFiles();
+        
+        music = LoadMusicStream(droppedFiles.paths[0]);
+        PlayMusicStream(music);
+        
+        UnloadDroppedFiles(droppedFiles);
+      }
+
       BeginDrawing();
 
         ClearBackground(RAYWHITE);
