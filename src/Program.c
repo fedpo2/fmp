@@ -4,7 +4,11 @@
 int main (int argc, char *argv[]) {
 
   if (argc<2) {
-    printf("     FMP - Fede Music Player\n//=================================// \n//  ./music [cancion1][cancion2].. // \n//=================================// \n\n");
+    printf("%s%s%s%s",
+           "     FMP - Fede Music Player\n",
+           "//=================================// \n",
+           "//  ./music [cancion1][cancion2].. // \n",
+           "//=================================// \n\n");
     return 0;
   }
   
