@@ -1,20 +1,26 @@
 // Copyright (c) 2023 Federico Polidoro. All Rights Reserved.
 #include <raylib.h>
 #include <stdio.h>
+#include <string.h>
 
 #define MAX_FILEPATH_RECORDED   4096
 #define MAX_FILEPATH_SIZE       2048
 
-int main (int argc, char *argv[]) {
+#define HELP_EXIT() show_help_message(); return 0
 
-  if (argc<2) {
+void show_help_message() {
     printf("%s%s%s%s",
            "     FMP - Fede Music Player\n",
            "//=================================// \n",
            "//  ./music [cancion1][cancion2].. // \n",
            "//=================================// \n\n");
-    return 0;
-  }
+}
+
+int main (int argc, char *argv[]) {
+
+  if (argc<2) { HELP_EXIT(); }
+  if (strcmp("-h",argv[1]) == 0) { HELP_EXIT(); }
+  if (strcmp("--help",argv[1]) == 0) { HELP_EXIT(); }
   
   int selector = 1;
   bool pause;
