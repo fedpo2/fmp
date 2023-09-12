@@ -26,6 +26,7 @@ int main (int argc, char *argv[]) {
   bool pause;
   float timePlayed = 0.1f, lastTime = 0.0f;
   
+  SetTraceLogLevel(LOG_ERROR); 
   InitWindow(400,200,"FMP - Fede Music Player");
   SetTargetFPS(60);
 
