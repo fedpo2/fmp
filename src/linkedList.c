@@ -1,15 +1,17 @@
+// Copyright (c) 2023 Federico Polidoro. All Rights Reserved.
 #include "linkedList.h"
 
 void print_list(struct linked_node *p){
-    if(p != NULL){
-        printf("%s ",p->value);
+    while(p != NULL){
+        printf("%s\n ",p->value);
         p = p->next;
     }
 }
 
 char* get_value(struct linked_node *p ,int index){
+    if( index == 0 ) return p->value;
     while(index != 0){
-        if(p->next != NULL){
+        if(p->next != NULL && p != NULL){
             p = p->next;
             --index;
         }else{
