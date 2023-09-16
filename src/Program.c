@@ -60,22 +60,19 @@ int main (int argc, char *argv[]) {
 
       timePlayed = GetMusicTimePlayed(music)/GetMusicTimeLength(music);
 
-      //chequea que el tiempo de reproduccion de la musica no sea más larga que la cancion 
-      if (timePlayed > 1.0f) {
-        timePlayed = 1.0f;
+      if (lastTime > timePlayed) {
+        StopMusicStream(music);
       }
 
-      if (timePlayed < lastTime) {
-        if (selector != argc-1) {
-          selector++;
-        } else {
-          selector = 1; 
+      if (!IsMusicStreamPlaying(music)) {
+        if(selector < ind-correccion){
+          ++selector;
+          lastTime = 0.0f;
+          music = LoadMusicStream(get_value(path, selector));
+          PlayMusicStream(music);
         }
-        lastTime = 0.0f;
-        music = LoadMusicStream(get_value(path, selector));
-        PlayMusicStream(music);
       }
-     
+
       lastTime = timePlayed;
       UpdateMusicStream(music);
 
@@ -104,15 +101,16 @@ int main (int argc, char *argv[]) {
       }
 
       if (IsKeyReleased(KEY_RIGHT)) {
-        if(selector < ind-2){
+        if(selector < ind-correccion){
           ++selector;
           lastTime = 0.0f;
           music = LoadMusicStream(get_value(path, selector));
           PlayMusicStream(music);
         }
       }
-     
-      if (IsFileDropped()) {
+
+//      NOTE: EXPERIMENTAL_FEATURE_BEGIN
+      if (IsFileDropped() && drag_and_drop) {
         FilePathList droppedFiles = LoadDroppedFiles();
 
         end_push(&path, droppedFiles.paths[0]);
@@ -127,8 +125,8 @@ int main (int argc, char *argv[]) {
         printf("\n\n");
         print_list(path);
         //
-
       }
+//      EXPERIMENTAL_FEATURE_END
 
       BeginDrawing();
 
