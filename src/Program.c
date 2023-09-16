@@ -8,7 +8,7 @@
 #define HELP_EXIT() show_help_message(); return 0
 
 void load_paths(struct linked_node** p, char** str, int cant){
-  for (int i = cant; i>0; i--) {
+  for (int i = cant; strcmp("-e", str[i]) != 0 && i > 0; i--) {
     top_push(p,str[i]);
   }
 }
@@ -19,12 +19,11 @@ void unload_paths(struct linked_node** p, int ind){
   }
 }
 
-
 void show_help_message() {
-    printf("     FMP - Fede Music Player\n"
-           "//=================================// \n"
-           "//  ./music [cancion1][cancion2].. // \n"
-           "//=================================// \n\n");
+    printf("        FMP - Fede Music Player\n"
+           "//======================================// \n"
+           "//  ./music [-e] [cancion1][cancion2].. // \n"
+           "//======================================// \n\n");
 }
 
 int main (int argc, char *argv[]) {
@@ -32,11 +31,21 @@ int main (int argc, char *argv[]) {
   if (argc<2) { HELP_EXIT(); }
   if (strcmp("-h",argv[1]) == 0) { HELP_EXIT(); }
   if (strcmp("--help",argv[1]) == 0) { HELP_EXIT(); }
-  
+
+  int ind = argc;
+  int correccion = 2;
+
+  bool drag_and_drop = false;
+  if (strcmp("-e", argv[1]) == 0) {
+    drag_and_drop = true;
+    correccion++;
+
+  }
+
   int selector = 0;
   bool pause;
   float timePlayed = 0.1f, lastTime = 0.0f;
-  
+
   SetTraceLogLevel(LOG_ERROR);
   InitWindow(400,200,"FMP - Fede Music Player");
   SetTargetFPS(60);
@@ -44,8 +53,7 @@ int main (int argc, char *argv[]) {
 
   struct linked_node* path = NULL;
 
-  load_paths(&path, argv, argc-1);
-  int ind = argc;
+  load_paths(&path, argv, ind-1);
 
   //NOTE: this is for debugging
   print_list(path);
@@ -60,22 +68,19 @@ int main (int argc, char *argv[]) {
 
       timePlayed = GetMusicTimePlayed(music)/GetMusicTimeLength(music);
 
-      //chequea que el tiempo de reproduccion de la musica no sea más larga que la cancion 
-      if (timePlayed > 1.0f) {
-        timePlayed = 1.0f;
+      if (lastTime > timePlayed) {
+        StopMusicStream(music);
       }
 
-      if (timePlayed < lastTime) {
-        if (selector != argc-1) {
-          selector++;
-        } else {
-          selector = 1; 
+      if (!IsMusicStreamPlaying(music)) {
+        if(selector < ind-correccion){
+          ++selector;
+          lastTime = 0.0f;
+          music = LoadMusicStream(get_value(path, selector));
+          PlayMusicStream(music);
         }
-        lastTime = 0.0f;
-        music = LoadMusicStream(get_value(path, selector));
-        PlayMusicStream(music);
       }
-     
+
       lastTime = timePlayed;
       UpdateMusicStream(music);
 
@@ -104,15 +109,16 @@ int main (int argc, char *argv[]) {
       }
 
       if (IsKeyReleased(KEY_RIGHT)) {
-        if(selector < ind-2){
+        if(selector < ind-correccion){
           ++selector;
           lastTime = 0.0f;
           music = LoadMusicStream(get_value(path, selector));
           PlayMusicStream(music);
         }
       }
-     
-      if (IsFileDropped()) {
+
+//      NOTE: EXPERIMENTAL_FEATURE_BEGIN
+      if (IsFileDropped() && drag_and_drop) {
         FilePathList droppedFiles = LoadDroppedFiles();
 
         end_push(&path, droppedFiles.paths[0]);
@@ -127,8 +133,8 @@ int main (int argc, char *argv[]) {
         printf("\n\n");
         print_list(path);
         //
-
       }
+//      EXPERIMENTAL_FEATURE_END
 
       BeginDrawing();
 
