@@ -8,7 +8,7 @@
 #define HELP_EXIT() show_help_message(); return 0
 
 void load_paths(struct linked_node** p, char** str, int cant){
-  for (int i = cant-1; i>0; i--) {
+  for (int i = cant; i>0; i--) {
     top_push(p,str[i]);
   }
 }
@@ -44,7 +44,7 @@ int main (int argc, char *argv[]) {
 
   struct linked_node* path = NULL;
 
-  load_paths(&path, argv, argc);
+  load_paths(&path, argv, argc-1);
   int ind = argc;
 
   //NOTE: this is for debugging
@@ -104,7 +104,7 @@ int main (int argc, char *argv[]) {
       }
 
       if (IsKeyReleased(KEY_RIGHT)) {
-        if(selector < ind-1){
+        if(selector < ind-2){
           ++selector;
           lastTime = 0.0f;
           music = LoadMusicStream(get_value(path, selector));
@@ -116,11 +116,18 @@ int main (int argc, char *argv[]) {
         FilePathList droppedFiles = LoadDroppedFiles();
 
         end_push(&path, droppedFiles.paths[0]);
-        selector = ++ind;
+        ind++;
+
+        selector = 0;
         music = LoadMusicStream(get_value(path, selector));
         PlayMusicStream(music);
-        
         UnloadDroppedFiles(droppedFiles);
+
+        //NOTE: this is for debugging
+        printf("\n\n");
+        print_list(path);
+        //
+
       }
 
       BeginDrawing();
