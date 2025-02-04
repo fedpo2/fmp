@@ -1,4 +1,4 @@
-# FMP - Fede Music Player
+# FMP - Fede Music Player <Archivado ya voy a hacer una version que use algun toolkit grafico y no raylib>
 
 ### Pre-requisitos📓 
 
